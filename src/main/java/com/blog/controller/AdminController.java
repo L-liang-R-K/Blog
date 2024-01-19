@@ -1,5 +1,6 @@
 package com.blog.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.HostInfo;
 import cn.hutool.system.OsInfo;
 import cn.hutool.system.SystemUtil;
@@ -66,10 +67,14 @@ public class AdminController {
     @GetMapping("/user/list")
     public String userList(UserListPageDto userListPageDto, Model model){
         Integer pageNumber = userListPageDto.getPageNumber();
-        Integer pageSize = userListPageDto.getPageSize();
+        String userName = userListPageDto.getUserName();
 
-        IPage<User> userPage = new Page<>(pageNumber, pageSize);
+        IPage<User> userPage = new Page<>(pageNumber, 20);
         LambdaQueryWrapper<User> userLambdaQueryWrapper = Wrappers.<User>lambdaQuery().orderByDesc(User::getUserRegisterTime);
+        if (StrUtil.isNotBlank(userName)){
+            userLambdaQueryWrapper.like(User::getUserName,userName);
+            model.addAttribute("userName",userName);
+        }
         IPage<User> userIPage = userService.page(userPage, userLambdaQueryWrapper);
         model.addAttribute("userPage", CommonPage.restPage(userIPage));
         return "/admin/userList";
