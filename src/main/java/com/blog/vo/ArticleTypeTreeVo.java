@@ -1,0 +1,14 @@
+package com.blog.vo;
+
+import com.blog.entity.Article;
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+public class ArticleTypeTreeVo {
+    private String articleTypeId;
+    private String articleTypeName;
+    private List<ArticleTypeTreeVo> articleTypeTreeVoList;
+    private List<Article> articleList;
+}
